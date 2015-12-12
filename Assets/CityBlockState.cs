@@ -19,6 +19,7 @@ public class CityBlockState : MonoBehaviour {
     {
         parent = transform.parent.GetComponent<CityBlock>();
         StartCoroutine(Appear());
+        transform.localRotation = Quaternion.Euler(0, 90 * Random.Range(0, 3), 0);
     }
 
     void LateUpdate()
@@ -26,12 +27,11 @@ public class CityBlockState : MonoBehaviour {
         if (disabled) return;
         if(leftTransitionPrefab != null && parent.leaning <= leftCap)
         {
-            Instantiate<CityBlockState>(leftTransitionPrefab);
-            StartCoroutine(Fade());
+            StartCoroutine(FadeToNext(leftTransitionPrefab));
         } else if(rightTransitionPrefab != null && rightCap <= parent.leaning)
         {
-            Instantiate<CityBlockState>(rightTransitionPrefab);
-            StartCoroutine(Fade());
+            Debug.Log("FADY");
+            StartCoroutine(FadeToNext(rightTransitionPrefab));
         }
     }
 
@@ -45,9 +45,18 @@ public class CityBlockState : MonoBehaviour {
         disabled = false;
     }
 
-    private IEnumerator Fade()
+    private IEnumerator FadeToNext(CityBlockState state)
     {
         disabled = true;
-        yield return null;
+        foreach (Animator a in GetComponentsInChildren<Animator>())
+        {
+            a.SetTrigger("Hide");
+            yield return new WaitForSeconds(Random.Range(0.02f, 0.2f));
+        }
+        yield return new WaitForSeconds(1.0f);
+        var obj = Instantiate<CityBlockState>(state);
+        obj.transform.parent = parent.transform;
+        obj.transform.localPosition = Vector3.zero;
+        Destroy(gameObject);
     }
 }

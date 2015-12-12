@@ -141,7 +141,6 @@ public class BlockGrid : MonoBehaviour {
         {
 
         }
-        Debug.Log("Added");
         this[outCoord.x, outCoord.y] = block;
     }
 
