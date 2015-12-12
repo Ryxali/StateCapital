@@ -33,6 +33,7 @@ public class CityBlockState : MonoBehaviour {
             Debug.Log("FADY");
             StartCoroutine(FadeToNext(rightTransitionPrefab));
         }
+        parent.leaning = Mathf.Clamp(parent.leaning, leftCap, rightCap);
     }
 
     private IEnumerator Appear()
