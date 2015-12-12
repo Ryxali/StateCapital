@@ -7,7 +7,7 @@ public class CityBlock : MonoBehaviour {
     
     [Tooltip("negative for communist, positive for capitalist"), Range(-1.0f, 1.0f)]
     public float leaning = 0.0f;
-   
+    
     private float influenceFactor = 1.0f;
     [SerializeField]
     private Mesh mesh;
@@ -15,6 +15,7 @@ public class CityBlock : MonoBehaviour {
     private CityBlockState blockPrefab;
 	// Use this for initialization
 	void Start () {
+        leaning = Random.Range(-0.2f, 0.2f);
         RefreshMesh();
         influenceFactor = Random.Range(0.3f, 2.0f);
         var o = Instantiate<CityBlockState>(blockPrefab);
@@ -26,6 +27,7 @@ public class CityBlock : MonoBehaviour {
 	void Update () {
         leaning += Game.leaning * Time.deltaTime * 0.1f * influenceFactor;
         Game.leaningAggregate += leaning;
+       
     }
 
     /// <summary>
