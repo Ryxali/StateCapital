@@ -4,18 +4,31 @@ using System.Collections.Generic;
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 public class CityBlock : MonoBehaviour {
+    
+    [Tooltip("negative for communist, positive for capitalist"), Range(-1.0f, 1.0f)]
+    public float leaning = 0.0f;
+   
+    private float influenceFactor = 1.0f;
     [SerializeField]
     private Mesh mesh;
+
+    public CityBlockState blockState;
 	// Use this for initialization
 	void Start () {
         RefreshMesh();
+        influenceFactor = Random.Range(0.3f, 2.0f);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
-	}
+        leaning += Game.leaning * Time.deltaTime * 0.1f;
+        blockState.Update(leaning);
 
+    }
+
+    /// <summary>
+    /// Builds the streets for this block
+    /// </summary>
     public void RefreshMesh()
     {
         mesh = new Mesh();

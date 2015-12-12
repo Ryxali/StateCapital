@@ -10,13 +10,24 @@ public class CityGrower : MonoBehaviour {
 	void Start () {
         grid = GetComponentInChildren<BlockGrid>();
         grid[0, 0] = Instantiate<GameObject>(blockPrefab);
-        grid.Add(Instantiate<GameObject>(blockPrefab), 1, 0);
-        grid.Add(Instantiate<GameObject>(blockPrefab), 2, 1);
-        grid.Add(Instantiate<GameObject>(blockPrefab), 3, 3);
+        StartCoroutine(Builder());
+        //grid.Add(Instantiate<GameObject>(blockPrefab), 1, 0);
+        //grid.Add(Instantiate<GameObject>(blockPrefab), 2, 1);
+        //grid.Add(Instantiate<GameObject>(blockPrefab), 3, 3);
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    IEnumerator Builder()
+    {
+        for (int i = 0; i < 5000; i++)
+        {
+            grid.AddToRandomOnoccupiedBlock(Instantiate<GameObject>(blockPrefab));
+            yield return new WaitForSeconds(0.08f);
+        }
+        
+    }
+
+    // Update is called once per frame
+    void Update () {
 	
 	}
 }
