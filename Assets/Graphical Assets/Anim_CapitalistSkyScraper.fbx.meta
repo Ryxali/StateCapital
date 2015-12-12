@@ -1,22 +1,30 @@
 fileFormatVersion: 2
-guid: 36d3849948f940746b80fc9ae2eafbbd
-timeCreated: 1449922555
+guid: af1ec7489243fb944b1c1cf4f38bd31a
+timeCreated: 1449928947
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
-    100002: joint3
-    100004: joint4
-    100006: polySurface488
+    100002: joint10
+    100004: joint5
+    100006: joint6
+    100008: joint7
+    100010: joint8
+    100012: joint9
+    100014: polySurface490
     400000: //RootNode
-    400002: joint3
-    400004: joint4
-    400006: polySurface488
-    4300000: polySurface488
+    400002: joint10
+    400004: joint5
+    400006: joint6
+    400008: joint7
+    400010: joint8
+    400012: joint9
+    400014: polySurface490
+    4300000: polySurface490
     7400000: Take 001
     9500000: //RootNode
-    13700000: polySurface488
+    13700000: polySurface490
   materials:
     importMaterials: 1
     materialName: 0
