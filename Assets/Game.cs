@@ -13,7 +13,7 @@ public class Game : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        float incr = Mathf.Log10(Mathf.Abs(leaningAggregate) + 1) * Time.deltaTime * 0.1f;
+        float incr = Mathf.Log10(Mathf.Abs(leaningAggregate) + 1) * Time.deltaTime * 0.3f;
         if (leaningAggregate < 0.0f)
             incr *= -1.0f;
         leaning += incr;

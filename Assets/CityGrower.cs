@@ -21,7 +21,7 @@ public class CityGrower : MonoBehaviour {
         for (int i = 0; i < 5000; i++)
         {
             grid.AddToRandomOnoccupiedBlock(Instantiate<GameObject>(blockPrefab));
-            yield return new WaitForSeconds(0.4f);
+            yield return new WaitForSeconds(Random.Range(0.4f, 2.0f));
         }
         
     }

@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+[RequireComponent(typeof(AudioSource))]
 public class CityBlockState : MonoBehaviour {
     protected CityBlock parent;
-
+    public AudioClip[] plopSounds;
     [SerializeField, Tooltip("more capitalist, values approaching 1.0")]
     private float rightCap;
     [SerializeField]
@@ -20,6 +20,12 @@ public class CityBlockState : MonoBehaviour {
         parent = transform.parent.GetComponent<CityBlock>();
         StartCoroutine(Appear());
         transform.localRotation = Quaternion.Euler(0, 90 * Random.Range(0, 3), 0);
+    }
+
+    private void PlayRandomPlop()
+    {
+        if (plopSounds.Length != 0 && Vector3.Distance(transform.position, Camera.main.transform.position) < 50.0f)
+            GetComponent<AudioSource>().PlayOneShot(plopSounds[Random.Range(0, plopSounds.Length)]);
     }
 
     void LateUpdate()
@@ -40,6 +46,7 @@ public class CityBlockState : MonoBehaviour {
     {
         foreach(Animator a in GetComponentsInChildren<Animator>()) {
             a.SetTrigger("Show");
+            PlayRandomPlop();
             yield return new WaitForSeconds(Random.Range(0.02f, 0.2f));
         }
         yield return new WaitForSeconds(1.0f);

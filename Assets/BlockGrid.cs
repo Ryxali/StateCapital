@@ -14,7 +14,7 @@ public class BlockGrid : MonoBehaviour {
         public int x, y;
     }
     private Dictionary<Coord, GameObject> container = new Dictionary<Coord, GameObject>();
-
+    public int count { get { return container.Count; } }
     [SerializeField]
     private Mesh mesh;
    
