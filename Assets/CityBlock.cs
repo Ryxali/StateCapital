@@ -11,12 +11,15 @@ public class CityBlock : MonoBehaviour {
     private float influenceFactor = 1.0f;
     [SerializeField]
     private Mesh mesh;
-
-    public CityBlockState blockState;
+    [SerializeField]
+    private CityBlockState blockPrefab;
 	// Use this for initialization
 	void Start () {
         RefreshMesh();
         influenceFactor = Random.Range(0.3f, 2.0f);
+        var o = Instantiate<CityBlockState>(blockPrefab);
+        o.transform.parent = transform;
+        o.transform.localPosition = Vector3.zero;
 	}
 	
 	// Update is called once per frame

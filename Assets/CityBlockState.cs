@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class CityBlockState : MonoBehaviour {
+public class CityBlockState : MonoBehaviour {
     protected CityBlock parent;
 
-    [SerializeField]
+    [SerializeField, Tooltip("more capitalist, values approaching 1.0")]
     private float rightCap;
     [SerializeField]
     private CityBlockState rightTransitionPrefab;
 
-    [SerializeField]
+    [SerializeField, Tooltip("more communist, values approaching -1.0")]
     private float leftCap;
     [SerializeField]
     private CityBlockState leftTransitionPrefab;
@@ -24,11 +24,11 @@ public abstract class CityBlockState : MonoBehaviour {
     void LateUpdate()
     {
         if (disabled) return;
-        if(parent.leaning <= leftCap)
+        if(leftTransitionPrefab != null && parent.leaning <= leftCap)
         {
             Instantiate<CityBlockState>(leftTransitionPrefab);
             StartCoroutine(Fade());
-        } else if(rightCap <= parent.leaning)
+        } else if(rightTransitionPrefab != null && rightCap <= parent.leaning)
         {
             Instantiate<CityBlockState>(rightTransitionPrefab);
             StartCoroutine(Fade());
@@ -37,7 +37,11 @@ public abstract class CityBlockState : MonoBehaviour {
 
     private IEnumerator Appear()
     {
-        yield return null;
+        foreach(Animator a in GetComponentsInChildren<Animator>()) {
+            a.SetTrigger("Show");
+            yield return new WaitForSeconds(Random.Range(0.02f, 0.2f));
+        }
+        yield return new WaitForSeconds(1.0f);
         disabled = false;
     }
 
