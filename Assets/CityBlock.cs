@@ -25,7 +25,7 @@ public class CityBlock : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         leaning += Game.leaning * Time.deltaTime * 0.1f;
-
+        Game.leaningAggregate += leaning;
     }
 
     /// <summary>
