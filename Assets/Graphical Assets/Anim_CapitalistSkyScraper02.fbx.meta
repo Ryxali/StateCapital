@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 3944f6ec32e512945861d0be33155943
-timeCreated: 1449936686
+guid: ef0e2c435464e23438560921d5bd110a
+timeCreated: 1449946949
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -8,15 +8,15 @@ ModelImporter:
     100000: //RootNode
     100002: joint11
     100004: joint12
-    100006: pCube21
+    100006: pCube24
     400000: //RootNode
     400002: joint11
     400004: joint12
-    400006: pCube21
-    4300000: pCube21
+    400006: pCube24
+    4300000: pCube24
     7400000: Take 001
     9500000: //RootNode
-    13700000: pCube21
+    13700000: pCube24
   materials:
     importMaterials: 1
     materialName: 0
