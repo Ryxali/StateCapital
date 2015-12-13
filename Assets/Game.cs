@@ -77,7 +77,7 @@ public class Game : MonoBehaviour {
             //BroadcastMessage("StopSimulation");
             commieLosePanel.gameObject.SetActive(true);
             
-            commieLosePanel.SetText(FindObjectOfType<BlockGrid>().count * 157);
+            commieLosePanel.SetText(FindObjectOfType<BlockGrid>().count * 127);
             leaning = -1.0f;
             shouldUpdate = false;
 

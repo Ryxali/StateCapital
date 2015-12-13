@@ -20,7 +20,7 @@ public class CityBlock : MonoBehaviour {
         influenceFactor = Random.Range(0.3f, 2.0f);
         var o = Instantiate<CityBlockState>(blockPrefab);
         o.transform.parent = transform;
-        o.transform.localPosition = Vector3.zero;
+        o.transform.localPosition = Vector3.down * 0.05f;
 	}
 	
 	// Update is called once per frame

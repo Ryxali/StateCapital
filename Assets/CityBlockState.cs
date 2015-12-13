@@ -34,7 +34,7 @@ public class CityBlockState : MonoBehaviour {
 
     private void PlayRandomPlop()
     {
-        if (plopSounds.Length != 0 && Vector3.Distance(transform.position, Camera.main.transform.position) < 50.0f)
+        if (plopSounds.Length != 0) // && Vector3.Distance(transform.position, Camera.main.transform.position) < 50.0f)
             GetComponent<AudioSource>().PlayOneShot(plopSounds[Random.Range(0, plopSounds.Length)]);
     }
 
@@ -68,6 +68,7 @@ public class CityBlockState : MonoBehaviour {
             Vector3 scale = a.transform.localScale;
             scale.y *= 1 + Random.Range(0.0f, randomHeightMultiplierRange);
             a.transform.localScale = scale;
+            
             PlayRandomPlop();
             yield return new WaitForSeconds(Random.Range(0.02f, 0.2f));
         }
@@ -87,7 +88,7 @@ public class CityBlockState : MonoBehaviour {
         yield return new WaitForSeconds(1.0f);
         var obj = Instantiate<CityBlockState>(state);
         obj.transform.parent = parent.transform;
-        obj.transform.localPosition = Vector3.zero;
+        obj.transform.localPosition = Vector3.down * 0.05f;
         disabled = true;
         Destroy(gameObject);
     }
