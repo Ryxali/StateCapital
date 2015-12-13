@@ -19,8 +19,8 @@ public class Game : MonoBehaviour {
     public ProgressBar cashFlowBar;
     public ProgressBar happinessBar;
 
-    public RectTransform commieLosePanel;
-    public RectTransform cappieLosePanel;
+    public EndGamePanel commieLosePanel;
+    public EndGamePanel cappieLosePanel;
 
     private bool shouldUpdate = true;
 	// Use this for initialization
@@ -67,15 +67,18 @@ public class Game : MonoBehaviour {
         happinessBar.sliderVal = happiness / 100.0f;
         cashFlowBar.sliderVal = cashFlow / 100.0f;
 
-        if(happiness <= 0.0f)
+        if(cashFlow <= 0.0f)
         {
-            BroadcastMessage("StopSimulation");
+            //BroadcastMessage("StopSimulation");
             commieLosePanel.gameObject.SetActive(true);
+            commieLosePanel.SetText(5000);
+
             shouldUpdate = false;
 
-        } else if(cashFlow <= 0.0f) {
-            BroadcastMessage("StopSimulation");
+        } else if(happiness <= 0.0f) {
+            //BroadcastMessage("StopSimulation");
             cappieLosePanel.gameObject.SetActive(true);
+            cappieLosePanel.SetText(5000);
             shouldUpdate = false;
         }
     }
