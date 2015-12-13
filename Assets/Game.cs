@@ -71,14 +71,15 @@ public class Game : MonoBehaviour {
         {
             //BroadcastMessage("StopSimulation");
             commieLosePanel.gameObject.SetActive(true);
-            commieLosePanel.SetText(5000);
+            
+            commieLosePanel.SetText(FindObjectOfType<BlockGrid>().count * 157);
 
             shouldUpdate = false;
 
         } else if(happiness <= 0.0f) {
             //BroadcastMessage("StopSimulation");
             cappieLosePanel.gameObject.SetActive(true);
-            cappieLosePanel.SetText(5000);
+            cappieLosePanel.SetText(FindObjectOfType<BlockGrid>().count * 127);
             shouldUpdate = false;
         }
     }

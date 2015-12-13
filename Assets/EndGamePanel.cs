@@ -21,7 +21,7 @@ public class EndGamePanel : MonoBehaviour {
     {
         get
         {
-            string[] arr = { "Torvalia Union" };
+            string[] arr = { "Torvalia Union", "Peoples Republic of Swindun" };
             return arr[Random.Range(0, arr.Length)];
         }
     }
@@ -30,7 +30,7 @@ public class EndGamePanel : MonoBehaviour {
     {
         get
         {
-            string[] arr = { "Unicorp inc." };
+            string[] arr = { "Unicorp inc.", "Macrosoft Hardware", "Edison Engines" };
             return arr[Random.Range(0, arr.Length)];
         }
     }
