@@ -19,6 +19,9 @@ public class CityBlockState : MonoBehaviour {
     public float cashFlowGain = 0.5f;
 
     private bool disabled = true;
+
+    private bool canTransition = true;
+    
     void Start()
     {
         parent = transform.parent.GetComponent<CityBlock>();
@@ -40,9 +43,11 @@ public class CityBlockState : MonoBehaviour {
 
     void LateUpdate()
     {
+
         if (disabled) return;
         Game.cashFlowAggregate += cashFlowGain * Time.deltaTime;
         Game.happinessAggregate += happinessGain * Time.deltaTime;
+        if (!canTransition) return;
         if (leftTransitionPrefab != null && parent.leaning <= leftCap)
         {
             StartCoroutine(FadeToNext(leftTransitionPrefab));
@@ -66,7 +71,7 @@ public class CityBlockState : MonoBehaviour {
 
     private IEnumerator FadeToNext(CityBlockState state)
     {
-        disabled = true;
+        canTransition = false;
         foreach (Animator a in GetComponentsInChildren<Animator>())
         {
             a.SetTrigger("Hide");
@@ -76,6 +81,7 @@ public class CityBlockState : MonoBehaviour {
         var obj = Instantiate<CityBlockState>(state);
         obj.transform.parent = parent.transform;
         obj.transform.localPosition = Vector3.zero;
+        disabled = true;
         Destroy(gameObject);
     }
 }

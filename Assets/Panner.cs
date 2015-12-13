@@ -13,7 +13,7 @@ public class Panner : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        float target = (8 + Mathf.Sqrt(blockGrid.count) * (Mathf.PI + 1));
+        float target = (20 + Mathf.Sqrt(blockGrid.count) * (Mathf.PI + 1));
         float start = transform.position.magnitude;
         if(!Mathf.Approximately(target, start))
             transform.position = transform.position.normalized * Mathf.MoveTowards(start, target, Time.deltaTime * (target - start));
