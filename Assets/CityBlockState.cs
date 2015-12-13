@@ -9,6 +9,9 @@ public class CityBlockState : MonoBehaviour {
     [SerializeField]
     private CityBlockState rightTransitionPrefab;
 
+    [Range(0.0f, 1.0f), SerializeField]
+    private float randomHeightMultiplierRange = 0.1f;
+
     [SerializeField, Tooltip("more communist, values approaching -1.0")]
     private float leftCap;
     [SerializeField]
@@ -62,6 +65,9 @@ public class CityBlockState : MonoBehaviour {
     {
         foreach(Animator a in GetComponentsInChildren<Animator>()) {
             a.SetTrigger("Show");
+            Vector3 scale = a.transform.localScale;
+            scale.y *= 1 + Random.Range(0.0f, randomHeightMultiplierRange);
+            a.transform.localScale = scale;
             PlayRandomPlop();
             yield return new WaitForSeconds(Random.Range(0.02f, 0.2f));
         }
@@ -75,6 +81,7 @@ public class CityBlockState : MonoBehaviour {
         foreach (Animator a in GetComponentsInChildren<Animator>())
         {
             a.SetTrigger("Hide");
+            
             yield return new WaitForSeconds(Random.Range(0.02f, 0.2f));
         }
         yield return new WaitForSeconds(1.0f);

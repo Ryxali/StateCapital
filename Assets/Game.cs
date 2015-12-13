@@ -40,6 +40,7 @@ public class Game : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        if (Input.GetKeyDown(KeyCode.Escape)) Application.Quit();
         leaningBar_Commie.sliderVal = 1 - (leaning + 1) / 2;
         leaningBar_Cappie.sliderVal = (leaning + 1) / 2;
         if (!shouldUpdate) return;
