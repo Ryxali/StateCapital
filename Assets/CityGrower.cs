@@ -15,13 +15,18 @@ public class CityGrower : MonoBehaviour {
         //grid.Add(Instantiate<GameObject>(blockPrefab), 2, 1);
         //grid.Add(Instantiate<GameObject>(blockPrefab), 3, 3);
     }
-
+    void StopSimulation()
+    {
+        StopAllCoroutines();
+    }
     IEnumerator Builder()
     {
+        float t = 1.0f;
         for (int i = 0; i < 5000; i++)
         {
             grid.AddToRandomOnoccupiedBlock(Instantiate<GameObject>(blockPrefab));
-            yield return new WaitForSeconds(Random.Range(0.4f, 2.0f));
+            yield return new WaitForSeconds(Random.Range(0.4f, 2.0f) * t);
+            t *= 0.995f;
         }
         
     }

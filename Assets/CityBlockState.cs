@@ -13,6 +13,10 @@ public class CityBlockState : MonoBehaviour {
     private float leftCap;
     [SerializeField]
     private CityBlockState leftTransitionPrefab;
+    [Range(-10.0f, 10.0f)]
+    public float happinessGain = 0.5f;
+    [Range(-10.0f, 10.0f)]
+    public float cashFlowGain = 0.5f;
 
     private bool disabled = true;
     void Start()
@@ -28,15 +32,22 @@ public class CityBlockState : MonoBehaviour {
             GetComponent<AudioSource>().PlayOneShot(plopSounds[Random.Range(0, plopSounds.Length)]);
     }
 
+    void StopSimulation()
+    {
+        StopAllCoroutines();
+        enabled = false;
+    }
+
     void LateUpdate()
     {
         if (disabled) return;
-        if(leftTransitionPrefab != null && parent.leaning <= leftCap)
+        Game.cashFlowAggregate += cashFlowGain * Time.deltaTime;
+        Game.happinessAggregate += happinessGain * Time.deltaTime;
+        if (leftTransitionPrefab != null && parent.leaning <= leftCap)
         {
             StartCoroutine(FadeToNext(leftTransitionPrefab));
         } else if(rightTransitionPrefab != null && rightCap <= parent.leaning)
         {
-            Debug.Log("FADY");
             StartCoroutine(FadeToNext(rightTransitionPrefab));
         }
         parent.leaning = Mathf.Clamp(parent.leaning, leftCap, rightCap);
