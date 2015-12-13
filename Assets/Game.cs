@@ -21,6 +21,7 @@ public class Game : MonoBehaviour {
 
     public EndGamePanel commieLosePanel;
     public EndGamePanel cappieLosePanel;
+    public EndGamePanel winPanel;
 
     private bool shouldUpdate = true;
 	// Use this for initialization
@@ -92,6 +93,14 @@ public class Game : MonoBehaviour {
     void LateUpdate()
     {
         
+    }
+
+    void Win()
+    {
+        winPanel.gameObject.SetActive(true);
+        winPanel.SetText(FindObjectOfType<BlockGrid>().count * 127);
+        leaning = 0.0f;
+        shouldUpdate = false;
     }
 
     void Restart()
