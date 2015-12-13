@@ -40,7 +40,11 @@ public class Game : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        leaningBar_Commie.sliderVal = 1 - (leaning + 1) / 2;
+        leaningBar_Cappie.sliderVal = (leaning + 1) / 2;
         if (!shouldUpdate) return;
+        
+
         float incr = Mathf.Log10(Mathf.Abs(leaningAggregate) + 1) * Time.deltaTime * 0.3f;
         if (leaningAggregate < 0.0f)
             incr *= -1.0f;
@@ -62,8 +66,7 @@ public class Game : MonoBehaviour {
         cashFlowAggregate = 0.0f;
 
         leaningText.text = leaning.ToString() + "\n" + happiness.ToString() + "\n" + cashFlow.ToString();
-        leaningBar_Commie.sliderVal =  1 - (leaning + 1) / 2;
-        leaningBar_Cappie.sliderVal = (leaning + 1) / 2;
+        
         happinessBar.sliderVal = happiness / 100.0f;
         cashFlowBar.sliderVal = cashFlow / 100.0f;
 
@@ -71,14 +74,16 @@ public class Game : MonoBehaviour {
         {
             //BroadcastMessage("StopSimulation");
             commieLosePanel.gameObject.SetActive(true);
-            commieLosePanel.SetText(5000);
-
+            
+            commieLosePanel.SetText(FindObjectOfType<BlockGrid>().count * 157);
+            leaning = -1.0f;
             shouldUpdate = false;
 
         } else if(happiness <= 0.0f) {
             //BroadcastMessage("StopSimulation");
             cappieLosePanel.gameObject.SetActive(true);
-            cappieLosePanel.SetText(5000);
+            cappieLosePanel.SetText(FindObjectOfType<BlockGrid>().count * 127);
+            leaning = 1.0f;
             shouldUpdate = false;
         }
     }
