@@ -8,11 +8,15 @@ public class ProgressBar : MonoBehaviour {
     private UnityEngine.UI.Image bar;
     [SerializeField]
     private bool horizontal = true;
+
+
+    private float targetSliderVal;
+
     public float sliderVal {
-        get { return _sliderVal; }
+        get { return targetSliderVal; }
         set
         {
-            _sliderVal = Mathf.Clamp01(value);
+            targetSliderVal = Mathf.Clamp01(value);
         }
     }
     // Use this for initialization
@@ -25,6 +29,7 @@ public class ProgressBar : MonoBehaviour {
 	void Update () {
         if (bar != null)
         {
+            _sliderVal = Mathf.MoveTowards(_sliderVal, targetSliderVal, Time.deltaTime * Mathf.Abs(targetSliderVal - _sliderVal) * 10.0f);
             RectTransform bt = bar.GetComponent<RectTransform>();
             Vector2 r = bt.sizeDelta;
             RectTransform tt = GetComponent<RectTransform>();
