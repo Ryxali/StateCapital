@@ -15,7 +15,10 @@ public class CityGrower : MonoBehaviour {
         //grid.Add(Instantiate<GameObject>(blockPrefab), 2, 1);
         //grid.Add(Instantiate<GameObject>(blockPrefab), 3, 3);
     }
-
+    void StopSimulation()
+    {
+        StopAllCoroutines();
+    }
     IEnumerator Builder()
     {
         float t = 1.0f;

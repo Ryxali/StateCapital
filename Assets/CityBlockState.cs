@@ -32,6 +32,12 @@ public class CityBlockState : MonoBehaviour {
             GetComponent<AudioSource>().PlayOneShot(plopSounds[Random.Range(0, plopSounds.Length)]);
     }
 
+    void StopSimulation()
+    {
+        StopAllCoroutines();
+        enabled = false;
+    }
+
     void LateUpdate()
     {
         if (disabled) return;
