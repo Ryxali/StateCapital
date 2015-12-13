@@ -97,6 +97,7 @@ public class Game : MonoBehaviour {
 
     void Win()
     {
+        if (!shouldUpdate) return;
         winPanel.gameObject.SetActive(true);
         winPanel.SetText(FindObjectOfType<BlockGrid>().count * 127);
         leaning = 0.0f;
