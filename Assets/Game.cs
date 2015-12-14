@@ -51,9 +51,9 @@ public class Game : MonoBehaviour {
         if (leaningAggregate < 0.0f)
             incr *= -1.0f;
         leaning += incr;
-        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) {
+        if (Input.GetKeyDown(KeyCode.LeftArrow)) {
             leaning -= 0.1f;
-        } else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        } else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             leaning += 0.1f;
         }

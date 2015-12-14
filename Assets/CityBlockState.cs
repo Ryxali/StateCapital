@@ -63,7 +63,6 @@ public class CityBlockState : MonoBehaviour {
             string key = renderers[i].sharedMesh.name;
             if (!batchedMeshes.ContainsKey(key))
             {
-                Debug.Log(key);
                 Mesh m = new Mesh();
                 Vector3 lScale = renderers[i].GetComponentInParent<Animator>().transform.localScale;
                 renderers[i].GetComponentInParent<Animator>().transform.localScale = Vector3.one;//new Vector3(lScale.x, 1.0f, lScale.z);
