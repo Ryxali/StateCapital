@@ -28,6 +28,11 @@ public class CityBlockState : MonoBehaviour {
 
     private static Dictionary<string, Mesh> batchedMeshes = new Dictionary<string, Mesh>();
 
+    private static Dictionary<Material, List<GameObject>> bigBatches = new Dictionary<Material, List<GameObject>>();
+
+    private static int bigBatchSizeX = 1;
+    private static int bigBatchSizeZ = 4;
+
 
     [ContextMenu("Batchy")]
     private void CreateBatches()
@@ -81,31 +86,118 @@ public class CityBlockState : MonoBehaviour {
             combList.Add(combine);
             renderers[i].enabled = false;
         }
-
-        foreach (var mat in combines.Keys)
+        if (rightTransitionPrefab != null && leftTransitionPrefab != null)
         {
-            GameObject o = new GameObject("Combined Mesh - " + mat.name);
-            o.transform.parent = transform;
-            o.transform.localPosition = Vector3.zero;
-            o.transform.localScale = Vector3.one;
-            o.transform.localRotation = Quaternion.Euler(Vector3.zero);
-            MeshFilter filter = filter = o.AddComponent<MeshFilter>();
-            filter.mesh = new Mesh();
+            foreach (var mat in combines.Keys)
+            {
+                GameObject o = new GameObject("Combined Mesh - " + mat.name);
+                o.transform.parent = transform;
+                o.transform.localPosition = Vector3.zero;
+                o.transform.localScale = Vector3.one;
+                o.transform.localRotation = Quaternion.Euler(Vector3.zero);
+                MeshFilter filter = filter = o.AddComponent<MeshFilter>();
+                filter.mesh = new Mesh();
 
-            filter.mesh.CombineMeshes(combines[mat].ToArray(), true, true);
-            MeshRenderer render = o.AddComponent<MeshRenderer>();
-            render.material = mat;
-            if (Game.useShadow)
-            {
-                render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
-                render.receiveShadows = true;
-            }
-            else
-            {
-                render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-                render.receiveShadows = false;
+                filter.mesh.CombineMeshes(combines[mat].ToArray(), true, true);
+                MeshRenderer render = o.AddComponent<MeshRenderer>();
+                render.material = mat;
+                if (Game.useShadow)
+                {
+                    render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+                    render.receiveShadows = true;
+                }
+                else
+                {
+                    render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                    render.receiveShadows = false;
+                }
             }
         }
+        else
+        {
+            foreach (var mat in combines.Keys)
+            {
+                GameObject o = null;
+                if (bigBatches.ContainsKey(mat))
+                {
+                    foreach (var go in bigBatches[mat])
+                    {
+                        Vector3 dist = (transform.position - go.transform.position) * (1.0f / (7.0f));
+                        //dist.x /= (float)bigBatchSizeX;
+                        //dist.z /= (float)bigBatchSizeZ;
+                        if (0.0f <= Mathf.Abs(dist.x) && Mathf.Abs(dist.x) < bigBatchSizeX && 0.0f <= Mathf.Abs(dist.z) && Mathf.Abs(dist.z) < bigBatchSizeZ)
+                        {
+                            o = go;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    bigBatches.Add(mat, new List<GameObject>());
+                }
+                
+                
+                //GameObject[] objs = GameObject.FindGameObjectsWithTag("BigComb_" + mat.name);
+                //GameObject o = GameObject.Find("Big_Combined_Mesh-" + mat.name);
+                if (o == null)
+                {
+                    Vector3 pos = transform.position;
+                    pos.x = ((int)pos.x / (7 * bigBatchSizeX));
+                    pos.z = ((int)pos.z / (7 * bigBatchSizeZ));
+                    
+                    o = new GameObject("Big_Combined_Mesh-" + mat.name + "_["+ (int)pos.x + ", " + (int)pos.z + "]");
+                    pos.x *= 7.0f * (float) bigBatchSizeX;
+                    pos.z *= 7.0f * (float)bigBatchSizeZ;
+                    o.transform.parent = transform.parent.parent.parent;
+                    o.transform.position = pos;
+                    o.transform.localScale = Vector3.one;
+                    o.transform.localRotation = Quaternion.Euler(Vector3.zero);
+                    bigBatches[mat].Add(o);
+                }
+
+                MeshFilter filter = o.GetComponent<MeshFilter>();
+                if(filter == null) filter = o.AddComponent<MeshFilter>();
+
+                MeshRenderer render = o.GetComponent<MeshRenderer>();
+                if(render == null) render = o.AddComponent<MeshRenderer>();
+
+
+
+
+
+                
+                for (int i = 0; i < combines[mat].Count; i++ )
+                {
+                    CombineInstance comb = combines[mat][i];
+                    comb.transform = Matrix4x4.TRS(-o.transform.position, Quaternion.Euler(Vector3.zero), Vector3.one) * transform.localToWorldMatrix * comb.transform;
+                    combines[mat][i] = comb;
+                }
+                Matrix4x4 matrix = Matrix4x4.TRS(filter.transform.position - o.transform.position, filter.transform.rotation, filter.transform.localScale);
+                CombineInstance inst = new CombineInstance();
+                inst.mesh = filter.mesh;
+                
+                inst.transform = matrix; // o.transform.worldToLocalMatrix * filter.transform.localToWorldMatrix;
+                combines[mat].Add(inst);
+                filter.mesh = new Mesh();
+
+
+                filter.mesh.CombineMeshes(combines[mat].ToArray(), true, true);
+                
+                render.material = mat;
+                if (Game.useShadow)
+                {
+                    render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+                    render.receiveShadows = true;
+                }
+                else
+                {
+                    render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                    render.receiveShadows = false;
+                }
+            }
+        }
+        
         
 
         
