@@ -58,31 +58,31 @@ public class CityBlockState : MonoBehaviour {
     private void Freeze()
     {
         SkinnedMeshRenderer[] renderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+        Mesh finalMesh = new Mesh();
+        List<CombineInstance> combines = new List<CombineInstance>();
         for (int i = 0; i < renderers.Length; i++)
         {
-            string key = renderers[i].sharedMesh.name;
-            if (!batchedMeshes.ContainsKey(key))
-            {
-                Mesh m = new Mesh();
-                Vector3 lScale = renderers[i].GetComponentInParent<Animator>().transform.localScale;
-                renderers[i].GetComponentInParent<Animator>().transform.localScale = Vector3.one;//new Vector3(lScale.x, 1.0f, lScale.z);
-                renderers[i].BakeMesh(m);
-
-                batchedMeshes.Add(key, m);
-                renderers[i].GetComponentInParent<Animator>().transform.localScale = lScale;
-            }
-            GameObject staticMesh = new GameObject("StaticMeshInstance");
-            staticMesh.transform.parent = renderers[i].transform.parent;
-            staticMesh.transform.localPosition = renderers[i].transform.localPosition;
-            staticMesh.transform.localRotation = renderers[i].transform.localRotation;
-            staticMesh.transform.localScale = Vector3.one;//renderers[i].transform.localScale;
-            staticMesh.AddComponent<MeshFilter>().sharedMesh = batchedMeshes[key];
-            staticMesh.AddComponent<MeshRenderer>().sharedMaterial = renderers[i].sharedMaterial;
-            staticMesh.GetComponent<MeshRenderer>().receiveShadows = false;
-            staticMesh.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            Mesh m = new Mesh();
+            renderers[i].BakeMesh(m);
+            CombineInstance combine = new CombineInstance();
+            combine.mesh = m;
+            Matrix4x4 trans = transform.worldToLocalMatrix;
+            Vector3 scale = renderers[i].transform.parent.localScale;
+            scale.x = 1 / scale.x;
+            scale.y = 1 / scale.y;
+            scale.z = 1 / scale.z;
+            Matrix4x4 scaler = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(Vector3.zero), scale);
+            combine.transform = trans * renderers[i].transform.localToWorldMatrix * scaler;
+            combines.Add(combine);
             renderers[i].enabled = false;
         }
-        
+        MeshFilter filter = GetComponent<MeshFilter>();
+        if (filter == null) filter = gameObject.AddComponent<MeshFilter>();
+        filter.mesh = new Mesh();
+        filter.mesh.CombineMeshes(combines.ToArray(), true, true);
+
+        MeshRenderer render = GetComponent<MeshRenderer>();
+        if (render == null) render = gameObject.AddComponent<MeshRenderer>();
     }
 
     private void UnFreeze()
@@ -179,4 +179,5 @@ public class CityBlockState : MonoBehaviour {
         disabled = true;
         Destroy(gameObject);
     }
+
 }
