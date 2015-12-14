@@ -31,7 +31,14 @@ public class CityBlockState : MonoBehaviour {
     private static Dictionary<Material, List<GameObject>> bigBatches = new Dictionary<Material, List<GameObject>>();
 
     private static int bigBatchSizeX = 1;
-    private static int bigBatchSizeZ = 4;
+    private static int bigBatchSizeZ { get
+        {
+#if UNITY_WEBGL
+            return 2;
+#else
+            return 4;
+#endif
+        } }
 
 
     [ContextMenu("Batchy")]
