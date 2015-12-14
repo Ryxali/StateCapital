@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 public class Game : MonoBehaviour {
     public static float leaning { get; private set; }
 
+    public static bool useShadow = true;
+
     public static float happiness { get; private set; }
     public static float cashFlow { get; private set; }
 
@@ -24,6 +26,9 @@ public class Game : MonoBehaviour {
     public EndGamePanel winPanel;
 
     private bool shouldUpdate = true;
+
+    private float lastArrowUsage = 0.0f;
+
 	// Use this for initialization
 	void Start () {
         InitVars();
@@ -53,7 +58,17 @@ public class Game : MonoBehaviour {
         leaning += incr;
         if (Input.GetKeyDown(KeyCode.LeftArrow)) {
             leaning -= 0.1f;
+            lastArrowUsage = Time.time;
         } else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            leaning += 0.1f;
+            lastArrowUsage = Time.time;
+        }
+        else if (Input.GetKeyDown(KeyCode.A) && lastArrowUsage + 0.3 < Time.time)
+        {
+            leaning -= 0.1f;
+        }
+        else if (Input.GetKeyDown(KeyCode.D) && lastArrowUsage + 0.3 < Time.time)
         {
             leaning += 0.1f;
         }
@@ -109,4 +124,6 @@ public class Game : MonoBehaviour {
         SceneManager.LoadScene("main");
         
     }
+
+    
 }

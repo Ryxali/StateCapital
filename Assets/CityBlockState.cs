@@ -57,32 +57,60 @@ public class CityBlockState : MonoBehaviour {
 
     private void Freeze()
     {
+        
         SkinnedMeshRenderer[] renderers = GetComponentsInChildren<SkinnedMeshRenderer>();
         Mesh finalMesh = new Mesh();
-        List<CombineInstance> combines = new List<CombineInstance>();
+        //List<CombineInstance> combines = new List<CombineInstance>();
+        Dictionary<Material, List<CombineInstance>> combines = new Dictionary<Material, List<CombineInstance>>();
         for (int i = 0; i < renderers.Length; i++)
         {
+            if(!combines.ContainsKey(renderers[i].sharedMaterial))combines.Add(renderers[i].sharedMaterial, new List<CombineInstance>());
+            List<CombineInstance> combList = combines[renderers[i].sharedMaterial];
             Mesh m = new Mesh();
             renderers[i].BakeMesh(m);
             CombineInstance combine = new CombineInstance();
             combine.mesh = m;
             Matrix4x4 trans = transform.worldToLocalMatrix;
             Vector3 scale = renderers[i].transform.parent.localScale;
-            scale.x = 1 / scale.x;
-            scale.y = 1 / scale.y;
-            scale.z = 1 / scale.z;
+            Vector3 scaleMesh = renderers[i].transform.localScale;
+            scale.x = 1 / scale.x / scaleMesh.x;
+            scale.y = 1 / scale.y / scaleMesh.y;
+            scale.z = 1 / scale.z / scaleMesh.z;
             Matrix4x4 scaler = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(Vector3.zero), scale);
-            combine.transform = trans * renderers[i].transform.localToWorldMatrix * scaler;
-            combines.Add(combine);
+            combine.transform = trans * renderers[i].localToWorldMatrix * scaler;
+            combList.Add(combine);
             renderers[i].enabled = false;
         }
-        MeshFilter filter = GetComponent<MeshFilter>();
-        if (filter == null) filter = gameObject.AddComponent<MeshFilter>();
-        filter.mesh = new Mesh();
-        filter.mesh.CombineMeshes(combines.ToArray(), true, true);
 
-        MeshRenderer render = GetComponent<MeshRenderer>();
-        if (render == null) render = gameObject.AddComponent<MeshRenderer>();
+        foreach (var mat in combines.Keys)
+        {
+            GameObject o = new GameObject("Combined Mesh - " + mat.name);
+            o.transform.parent = transform;
+            o.transform.localPosition = Vector3.zero;
+            o.transform.localScale = Vector3.one;
+            o.transform.localRotation = Quaternion.Euler(Vector3.zero);
+            MeshFilter filter = filter = o.AddComponent<MeshFilter>();
+            filter.mesh = new Mesh();
+
+            filter.mesh.CombineMeshes(combines[mat].ToArray(), true, true);
+            MeshRenderer render = o.AddComponent<MeshRenderer>();
+            render.material = mat;
+            if (Game.useShadow)
+            {
+                render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+                render.receiveShadows = true;
+            }
+            else
+            {
+                render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                render.receiveShadows = false;
+            }
+        }
+        
+
+        
+
+
     }
 
     private void UnFreeze()
@@ -103,6 +131,19 @@ public class CityBlockState : MonoBehaviour {
         parent = transform.parent.GetComponent<CityBlock>();
         StartCoroutine(Appear());
         transform.localRotation = Quaternion.Euler(0, 90 * Random.Range(0, 3), 0);
+        foreach (var rend in GetComponentsInChildren<SkinnedMeshRenderer>())
+        {
+            if (Game.useShadow)
+            {
+                rend.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+                rend.receiveShadows = true;
+            }
+            else
+            {
+                rend.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                rend.receiveShadows = false;
+            }
+        }
     }
 
     private void PlayRandomPlop()
